@@ -12,3 +12,8 @@ class Controller:
     @Bot.bot.message_handler(commands=['update_bookmarks'])
     def update_bookmarks(message):
         Bot.execute_command_to_message(UpdateBookmarkDatabaseCommand, message)
+
+    @staticmethod
+    @Bot.bot.message_handler(content_types=['text'])
+    def create_bookmark(message):
+        Bot.execute_command_to_message(CreateBookmarkCommand, message)

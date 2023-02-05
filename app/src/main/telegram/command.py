@@ -6,6 +6,7 @@ from telebot.types import Message
 
 from main.telegram.repository import Repository, User
 from main.telegram.config import Config
+from main.notion.notion import Notion
 
 
 class Command(ABC):
@@ -45,3 +46,8 @@ class UpdateBookmarkDatabaseCommand(Command):
     @staticmethod
     def __extract_database_id_from_link(link: str) -> str:
         return link.split('?v=')[0].split('/')[-1]
+
+
+class CreateBookmarkCommand(Command):
+    def execute(self) -> Any:
+        Notion.create_bookmark(bookmark_database_id=self._repository.get_user(str(self._message.from_user.id)).bookmarks_database_id, link=self._message.text)
