@@ -1,5 +1,47 @@
-from abc import ABC
+from abc import ABC, abstractmethod
+from dataclasses import dataclass
+from typing import Dict
+
+
+@dataclass
+class User:
+    id: str
+    notion_token: str
+    bookmarks_database_id: str
 
 
 class Repository(ABC):
-    pass
+    @abstractmethod
+    def get_user(self, user_id: str) -> User:
+        pass
+
+    @abstractmethod
+    def update_user(self, user: User):
+        pass
+
+
+class RAMRepository(Repository):
+    __instance: Repository = None
+
+    def __new__(cls, *args, **kwargs):
+        if cls.__instance is None:
+            cls.__instance = super().__new__(cls, *args, **kwargs)
+        return cls.__instance
+
+    def __init__(self):
+        self._dictionary: Dict[str, Dict[str, str]] = {}
+
+    def get_user(self, user_id: str) -> User:
+        return User(
+            id=user_id,
+            notion_token=self._dictionary[user_id]['notion_token'],
+            bookmarks_database_id=self._dictionary[user_id]['bookmarks_database_id']
+        )
+
+    def update_user(self, user: User):
+        self._dictionary.update({
+            user.id: {
+                'notion_token': user.notion_token,
+                'bookmarks_database_id': user.bookmarks_database_id
+            }
+        })
