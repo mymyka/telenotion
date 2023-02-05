@@ -5,12 +5,12 @@ from telebot.types import Message
 
 from main.telegram.config import Config
 from main.telegram.command import Command
-from main.telegram.repository import Repository
+from main.telegram.repository import Repository, RAMRepository
 
 
 class Bot:
     bot: TeleBot = TeleBot(Config.token)
-    repository: Repository = Repository()
+    repository: Repository = RAMRepository()
 
     @classmethod
     def execute_command_to_message(cls,

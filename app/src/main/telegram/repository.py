@@ -6,7 +6,6 @@ from typing import Dict
 @dataclass
 class User:
     id: str
-    notion_token: str
     bookmarks_database_id: str
 
 
@@ -34,14 +33,12 @@ class RAMRepository(Repository):
     def get_user(self, user_id: str) -> User:
         return User(
             id=user_id,
-            notion_token=self._dictionary[user_id]['notion_token'],
             bookmarks_database_id=self._dictionary[user_id]['bookmarks_database_id']
         )
 
     def update_user(self, user: User):
         self._dictionary.update({
             user.id: {
-                'notion_token': user.notion_token,
                 'bookmarks_database_id': user.bookmarks_database_id
             }
         })
