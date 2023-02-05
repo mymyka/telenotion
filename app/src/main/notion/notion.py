@@ -53,6 +53,3 @@ class Notion:
         data = json.dumps(newPageData)
 
         res = requests.request("POST", cls.__createUrl, headers=cls.__headers, data=data)
-
-        print(res.status_code)
-        print(res.text)

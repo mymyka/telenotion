@@ -1,8 +1,11 @@
+import os
+
+
 class Config:
     @classmethod
     @property
     def token(cls) -> str:
-        return "TOKEN"
+        return os.getenv('TELEGRAM_BOT_TOKEN')
 
     @classmethod
     @property

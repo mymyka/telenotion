@@ -1,5 +1,8 @@
+import os
+
+
 class Config:
     @classmethod
     @property
     def token(cls):
-        return "TOKEN"
+        return os.getenv('NOTION_TOKEN')
