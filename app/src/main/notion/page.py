@@ -1,22 +1,17 @@
-from properties import Property
+from main.notion.parameters import Parameter
 from dataclasses import dataclass
-from typing import List, Dict
+from typing import List
 
 
 @dataclass
 class Page:
-    parent: str
-    properties: List[Property]
+    parameters: List[Parameter]
 
     @property
     def json(self):
-        json = {
-            "parent": {},
-            "properties": {}
-        }
+        json = {}
 
-        json.update({"database_id": self.parent})
-        for _ in self.properties:
-            json["properties"].update(_)
+        for _ in self.parameters:
+            json.update(_.json)
 
         return json
