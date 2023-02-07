@@ -22,7 +22,10 @@ class Notion:
                     "type": "multi_select",
                     "multi_select": [
                         {
-                            "name": "meta"
+                            "name": "meta",
+                        },
+                        {
+                            "name": "lol"
                         }
                     ]
                 },
@@ -37,7 +40,7 @@ class Notion:
                             },
                             "annotations": {
                                 "bold": False,
-                                "italic": False,
+                                "italic": True,
                                 "strikethrough": False,
                                 "underline": False,
                                 "code": False,
