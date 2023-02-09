@@ -2,11 +2,16 @@ from abc import ABC, abstractmethod
 from typing import Optional, Any
 
 from telebot import TeleBot
-from telebot.types import Message
+from telebot.types import Message, ReplyKeyboardMarkup, KeyboardButton
 
 from main.telegram.repository import Repository, User
 from main.telegram.config import Config
 from main.notion.notion import Notion
+from main.notion.parameters import *
+from main.notion.properties import *
+from main.telegram.parser import *
+
+from main.notion.page import Page
 
 
 class Command(ABC):
@@ -50,4 +55,32 @@ class UpdateBookmarkDatabaseCommand(Command):
 
 class CreateBookmarkCommand(Command):
     def execute(self) -> Any:
-        Notion.create_bookmark(bookmark_database_id=self._repository.get_user(str(self._message.from_user.id)).bookmarks_database_id, link=self._message.text)
+        self.__request_user_input()
+        self._bot.register_next_step_handler_by_chat_id(self._message.chat.id,
+                                                        self.__create_bookmark)
+
+    def __request_user_input(self):
+        self._bot.reply_to(self._message, Config.create_bookmark_message)
+
+    def __create_bookmark(self, message):
+        with WebpageParser(message.text) as parser:
+            cover: Parameter = Cover(parser.cover)
+            parent_page: Parameter = ParentPage(self._repository
+                                                .get_user(str(message.from_user.id))
+                                                .bookmarks_database_id)
+            properties: Parameter = Properties([
+                Link(message.text),
+                Title(parser.title),
+                Tags(['test'])
+            ])
+            Notion.create_page(Page([cover, parent_page, properties]))
+
+
+class SendDefaultReplayKeyboardMarkup(Command):
+    def execute(self) -> Any:
+        markup: ReplyKeyboardMarkup = ReplyKeyboardMarkup()
+        create_bookmark: KeyboardButton = KeyboardButton("🔖 Create bookmark")
+        update_bookmark_database: KeyboardButton = KeyboardButton("⚙️🔖 Update bookmark database")
+        markup.row(create_bookmark)
+        markup.row(update_bookmark_database)
+        self._bot.send_message(self._message.chat.id, reply_markup=markup, text='What are want to do')

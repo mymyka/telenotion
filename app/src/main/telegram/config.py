@@ -20,4 +20,9 @@ class Config:
     @classmethod
     @property
     def update_bookmarks_database_message(cls) -> str:
-        return "Input Bookmarks Database id: "
+        return "Input Bookmarks Database link: "
+
+    @classmethod
+    @property
+    def create_bookmark_message(cls) -> str:
+        return "Input link for bookmark"

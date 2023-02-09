@@ -12,7 +12,7 @@ class Parameter(ABC):
 
 
 @dataclass
-class Parent(Parameter):
+class ParentPage(Parameter):
     id: str
 
     @property
